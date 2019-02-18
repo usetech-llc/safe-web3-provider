@@ -32,6 +32,9 @@ class SafeSubprovider {
       case 'eth_sendTransaction':
         this.sendTransaction(payload, end)
         return
+      case 'eth_sign':
+        end(null, "123")
+        return
       default:
         next()
     }
