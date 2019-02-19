@@ -21,8 +21,6 @@ class SafeSubprovider {
   }
 
   signMessage(payload, end) {
-    const id = uuid()
-    payload.params[0].id = id
     const signMessageEvent = new window.CustomEvent(
       'EV_SIGN_MESSAGE',
       { detail: payload.params[0] }
