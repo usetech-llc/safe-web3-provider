@@ -23,47 +23,22 @@ class SafeSubprovider {
   signMessage(payload, end) {
     const id = uuid()
     payload.params[0].id = id
-    const showPopupEvent = new window.CustomEvent(
-      'EV_SHOW_POPUP_SIGN',
+    const signMessageEvent = new window.CustomEvent(
+      'EV_SIGN_MESSAGE',
       { detail: payload.params[0] }
     )
-    window.dispatchEvent(showPopupEvent)
+    window.dispatchEvent(signMessageEvent)
 
-    /*
-    const resolveTransactionHandler = function (data) {
-      window.removeEventListener('EV_RESOLVED_TRANSACTION' + data.detail.id, resolveTransactionHandler)
-      if (data.detail.hash) {
-        end(null, data.detail.hash)
+    const messageSignedHandler = function (data) {
+      window.removeEventListener('EV_MESSAGE_SIGNED', messageSignedHandler)
+      if (data.detail) {
+        end(null, data.detail)
       } else {
-        end(new Error('Transaction rejected', data.detail.id))
+        end(new Error('Something went wrong', null))
       }
     }
-    window.addEventListener('EV_RESOLVED_TRANSACTION' + id, resolveTransactionHandler)
-    */
+    window.addEventListener('EV_MESSAGE_SIGNED', messageSignedHandler)
   }
-
-/*
-export const generatePairingCodeContent = (privateKey) => {
-  const startDate = new Date()
-  const expirationDate = new Date(startDate.setMinutes(startDate.getMinutes() + 10))
-  const formatedExpirationDate = expirationDate.toISOString().split('.')[0] + '+00:00'
-
-  const data = EthUtil.sha3('GNO' + formatedExpirationDate)
-  const vrs = EthUtil.ecsign(data, privateKey)
-  const r = new BigNumber(EthUtil.bufferToHex(vrs.r))
-  const s = new BigNumber(EthUtil.bufferToHex(vrs.s))
-  const pairingCodeContent = JSON.stringify({
-    expirationDate: formatedExpirationDate,
-    signature: {
-      r: r.toString(10),
-      s: s.toString(10),
-      v: vrs.v
-    }
-  })
-  return pairingCodeContent
-}
-
-*/
 
   handleRequest(payload, next, end) {
     const account = this.engine.currentSafe
