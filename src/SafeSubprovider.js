@@ -51,6 +51,7 @@ class SafeSubprovider {
         this.sendTransaction(payload, end)
         return
       case 'eth_sign':
+        console.log("Received eth_sign command");
         this.signMessage(payload, end)
         return
       default:
