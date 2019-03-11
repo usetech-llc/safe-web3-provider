@@ -23,7 +23,7 @@ class SafeSubprovider {
   signMessage(payload, end) {
     const signMessageEvent = new window.CustomEvent(
       'EV_SIGN_MESSAGE',
-      { detail: payload.params[0] }
+      { detail: payload.params[1] } // In some web3 implementations data is the first parameter, in some it is second
     )
     window.dispatchEvent(signMessageEvent)
 
